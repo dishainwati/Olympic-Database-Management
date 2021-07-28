@@ -1,0 +1,353 @@
+CREATE TABLE Equipment
+(
+  Item_id INT NOT NULL,
+  Name_e VARCHAR2(30) NOT NULL,
+  Cost INT NOT NULL,
+  number_of_equipment INT NOT NULL,
+  PRIMARY KEY (Item_id)
+);
+
+CREATE TABLE Sponsors
+(
+  Name_s VARCHAR2(30) NOT NULL,
+  Sponsor_id INT NOT NULL,
+  PRIMARY KEY (Sponsor_id)
+);
+
+CREATE TABLE Transport
+(
+  Vehicle_id VARCHAR2(10) NOT NULL,
+  Capacity INT NOT NULL,
+  PRIMARY KEY (Vehicle_id)
+);
+
+CREATE TABLE Location
+(
+  Name_L VARCHAR2(30) NOT NULL,
+  Zip_code INT NOT NULL,
+  PRIMARY KEY (Name_L, Zip_code)
+);
+
+
+CREATE TABLE Arena
+(
+  Capacity INT NOT NULL,
+  Name_L VARCHAR2(30) NOT NULL,
+  Zip_code INT NOT NULL,
+  PRIMARY KEY (Name_L, Zip_code),
+  FOREIGN KEY (Name_L, Zip_code) REFERENCES Location(Name_L, Zip_code)
+);
+
+
+CREATE TABLE Accomodation
+(
+  Name_L VARCHAR2(30) NOT NULL,
+  Zip_code INT NOT NULL,
+  PRIMARY KEY (Name_L, Zip_code),
+  FOREIGN KEY (Name_L, Zip_code) REFERENCES Location(Name_L, Zip_code)
+);
+
+
+CREATE TABLE Tickets
+(
+  Seat_Number VARCHAR2(10) NOT NULL,
+  Ticket_number INT NOT NULL,
+  date_t DATE NOT NULL,
+  cost INT NOT NULL,
+  Name_L VARCHAR2(30) NOT NULL,
+  Zip_code INT NOT NULL,
+  PRIMARY KEY (Ticket_number, date_t),
+  FOREIGN KEY (Name_L, Zip_code) REFERENCES Arena(Name_L, Zip_code)
+);
+
+CREATE TABLE Fixtures
+(
+  Match_id VARCHAR2(10) NOT NULL,
+  Name_sports VARCHAR2(30) NOT NULL,
+  Time_f VARCHAR2(30) NOT NULL,
+  Date_f DATE NOT NULL,
+  Name_L VARCHAR2(30) NOT NULL,
+  Zip_code INT NOT NULL,
+  PRIMARY KEY (Match_id),
+  FOREIGN KEY (Name_L, Zip_code) REFERENCES Arena(Name_L, Zip_code)
+);
+
+CREATE TABLE Result
+(
+  Country VARCHAR2(30) NOT NULL,
+  Ranking INT NOT NULL,
+  Match_id VARCHAR2(10) NOT NULL,
+  PRIMARY KEY (Country, Match_id),
+  FOREIGN KEY (Match_id) REFERENCES Fixtures(Match_id)
+);
+
+CREATE TABLE Sponsored_by
+(
+  Sponsor_id INT NOT NULL,
+  Match_id VARCHAR2(10) NOT NULL,
+  FOREIGN KEY (Sponsor_id) REFERENCES Sponsors(Sponsor_id),
+  FOREIGN KEY (Match_id) REFERENCES Fixtures(Match_id)
+);
+
+CREATE TABLE require
+(
+  Item_id INT NOT NULL,
+  Match_id VARCHAR2(10) NOT NULL,
+  FOREIGN KEY (Item_id) REFERENCES Equipment(Item_id),
+  FOREIGN KEY (Match_id) REFERENCES Fixtures(Match_id)
+);
+
+CREATE TABLE Person
+(
+  Name VARCHAR2(30) NOT NULL,
+  Person_id VARCHAR2(10) NOT NULL,
+  Gender VARCHAR2(10),
+  Name_L VARCHAR2(30) NOT NULL,
+  Zip_code INT NOT NULL,
+  PRIMARY KEY (Person_id),
+  FOREIGN KEY (Name_L, Zip_code) REFERENCES Accomodation(Name_L, Zip_code)
+);
+
+
+CREATE TABLE Official
+(
+  Medal_presenter CHAR(1) NOT NULL,
+  Referee CHAR(1) NOT NULL,
+  Judge CHAR(1) NOT NULL,
+  Person_id VARCHAR2(10) NOT NULL,
+  PRIMARY KEY (Person_id),
+  FOREIGN KEY (Person_id) REFERENCES Person(Person_id)
+);
+
+CREATE TABLE Athelete
+(
+  Country VARCHAR2(30) NOT NULL,
+  Sport VARCHAR2(30) NOT NULL,
+  JerseyNumber INT NOT NULL,
+  Person_id VARCHAR2(10) NOT NULL,
+  PRIMARY KEY (Person_id),
+  FOREIGN KEY (Person_id) REFERENCES Person(Person_id)
+);
+
+
+CREATE TABLE Participates_organises
+(
+  Match_id VARCHAR2(10) NOT NULL,
+  Person_id VARCHAR2(10) NOT NULL,
+  FOREIGN KEY (Match_id) REFERENCES Fixtures(Match_id),
+  FOREIGN KEY (Person_id) REFERENCES Person(Person_id)
+);
+
+CREATE TABLE Travels_from
+(
+  Time_D VARCHAR2(10) NOT NULL,
+  Date_D DATE NOT NULL,
+  Name_L VARCHAR2(30) NOT NULL,
+  Zip_code INT NOT NULL,
+  Person_id VARCHAR2(10) NOT NULL,
+  Vehicle_id VARCHAR2(10) NOT NULL,
+  FOREIGN KEY (Name_L, Zip_code) REFERENCES Location(Name_L, Zip_code),
+  FOREIGN KEY (Person_id) REFERENCES Person(Person_id),
+  FOREIGN KEY (Vehicle_id) REFERENCES Transport(Vehicle_id)
+);
+
+
+
+CREATE TABLE Travels_to
+(
+  Time_A VARCHAR2(10) NOT NULL,
+  Date_A DATE NOT NULL,
+  Name_L VARCHAR2(30) NOT NULL,
+  Zip_code INT NOT NULL,
+  Person_id VARCHAR2(10) NOT NULL,
+  Vehicle_id VARCHAR2(10) NOT NULL,
+  FOREIGN KEY (Name_L, Zip_code) REFERENCES Location(Name_L, Zip_code),
+  FOREIGN KEY (Person_id) REFERENCES Person(Person_id),
+  FOREIGN KEY (Vehicle_id) REFERENCES Transport(Vehicle_id)
+);
+
+
+CREATE TABLE uses
+(
+  Vehicle_id VARCHAR2(10) NOT NULL,
+  Person_id VARCHAR2(10) NOT NULL,
+  FOREIGN KEY (Vehicle_id) REFERENCES Transport(Vehicle_id),
+  FOREIGN KEY (Person_id) REFERENCES Person(Person_id)
+);
+
+
+insert into location values ('Olympics Aquatic Stadium', 2501);
+insert into location values ('Engenehao Stadium', 2503);
+insert into location values ('Olympics Shooting Centre', 2504);
+insert into location values ('Sambrodomo', 2504);
+insert into location values ('Riocentro', 2505);
+insert into location values ('Miramar Hotel', 2505);
+insert into location values ('Fasano Hotel', 2506);
+insert into location values ('Venit Mio Hotel', 2502);
+insert into location values ('Grand Residency', 2502);
+insert into location values ('Grand Residency', 2508);
+select * from location;
+
+insert into arena values ('Olympics Aquatic Stadium', 2501,15000);
+insert into arena values ('Engenehao Stadium', 2503,60000);
+insert into arena values ('Olympics Shooting Centre', 2504,10000);
+insert into arena values ('Sambrodomo', 2504,9000);
+insert into arena values ('Riocentro', 2505,36000);
+select * from arena;
+
+insert into accomodation values ('Miramar Hotel', 2505);
+insert into accomodation values ('Fasano Hotel', 2506);
+insert into accomodation values ('Venit Mio Hotel', 2502);
+insert into accomodation values ('Grand Residency', 2502);
+insert into accomodation values ('Grand Residency', 2508);
+select * from accomodation;
+
+
+insert into tickets values ('A1',102,'01-05-2016',550,'Engenehao Stadium', 2503);
+insert into tickets values ('A1',103,'01-05-2016',1000,'Engenehao Stadium', 2503);
+insert into tickets values ('A1',102,'03-05-2016',2000,'Sambrodomo', 2504);
+insert into tickets values ('B1',103,'03-05-2016',2000,'Sambrodomo', 2504);
+insert into tickets values ('A1',105,'10-05-2016',1500,'Riocentro', 2505);
+select * from tickets;
+
+
+insert into person values ('Usain Bolt','A1','Venit Mio Hotel', 2502,'M');
+insert into person values ('Justin Gatlin','A2','Venit Mio Hotel', 2502,'M');
+insert into person values ('Andre De Grasse','A3','Grand Residency', 2508,'M');
+insert into person values ('Yohan Blake','A4','Grand Residency', 2508,'M');
+insert into person values ('P. V. Sindhu','A5','Fasano Hotel', 2506,'F');
+insert into person values ('Nozomi Okuhara','A6','Fasano Hotel', 2506,'F');
+insert into person values ('Carolina Marin','A7','Fasano Hotel', 2506,'F');
+insert into person values ('Anna Kortozaki','O1','Grand Residency', 2502,'M');
+insert into person values ('Monika Karsch','O2','Miramar Hotel', 2505,'F');
+insert into person values ('Heidi Diethelm Gerber','O3','Venit Mio Hotel', 2502,'M');
+select * from person;
+
+insert into athelete values ('Jamaica','Men''s 100M',12,'A1');
+insert into athelete values ('USA','Men''s 100M',34,'A2');
+insert into athelete values ('Canada','Men''s 100M',20,'A3');
+insert into athelete values ('South Africa','Men''s 100M',15,'A4');
+insert into athelete values ('India','Badminton Women''s Single',9,'A5');
+insert into athelete values ('Japan','Badminton Women''s Single',56,'A6');
+insert into athelete values ('Spain','Badminton Women''s Single',2,'A7');
+select * from athelete;
+
+insert into official values ('Y','Y','N','O1');
+insert into official values ('N','Y','Y','O2');
+insert into official values ('Y','Y','Y','O3');
+select * from official;
+
+
+insert into Transport values ('B01',100);
+insert into Transport values ('B02',120);
+insert into Transport values ('B03',50);
+insert into Transport values ('B04',75);
+insert into Transport values ('B05',60);
+select * from Transport;
+
+insert into fixtures values ('M1','Badminton Women''s Final','09:00 AM','01-05-2016','Engenehao Stadium', 2503);
+insert into fixtures values ('M2','Men''s 100M','05:00 PM','03-05-2016','Sambrodomo', 2504);
+insert into fixtures values ('M3','Men''s 100M Final','11:00 AM','10-05-2016','Riocentro', 2505);
+select * from fixtures;
+
+insert into uses values ('B05','A1');
+insert into uses values ('B05','A2');
+insert into uses values ('B01','A2');
+insert into uses values ('B03','A3');
+insert into uses values ('B03','A4');
+insert into uses values ('B01','A5');
+insert into uses values ('B01','A6');
+insert into uses values ('B01','A7');
+insert into uses values ('B01','O1');
+insert into uses values ('B04','O1');
+insert into uses values ('B05','O2');
+insert into uses values ('B02','O3');
+insert into uses values ('B05','O3');
+select * from uses;
+
+insert into Participates_Organises values ('M1','A5');
+insert into Participates_Organises values ('M1','A6');
+insert into Participates_Organises values ('M1','A7');
+insert into Participates_Organises values ('M1','O3');
+insert into Participates_Organises values ('M2','A2');
+insert into Participates_Organises values ('M2','A3');
+insert into Participates_Organises values ('M2','A4');
+insert into Participates_Organises values ('M2','O1');
+insert into Participates_Organises values ('M2','O2');
+insert into Participates_Organises values ('M3','A1');
+insert into Participates_Organises values ('M3','A2');
+insert into Participates_Organises values ('M3','A3');
+insert into Participates_Organises values ('M3','O1');
+insert into Participates_Organises values ('M3','O3');
+select * from Participates_Organises;
+
+insert into result values ('Spain',1,'M1');
+insert into result values ('India',2,'M1');
+insert into result values ('Japan',3,'M1');
+insert into result values ('Canada',1,'M2');
+insert into result values ('USA',2,'M2');
+insert into result values ('South Africa',3,'M2');
+insert into result values ('Jamaica',1,'M3');
+insert into result values ('USA',2,'M3');
+insert into result values ('Canada',3,'M3');
+select * from result;
+
+insert into sponsors values ('Coca Cola',501);
+insert into sponsors values ('Lenovo',502);
+insert into sponsors values ('Ferrari Ltd.',503);
+insert into sponsors values ('Subway',504);
+select * from sponsors;
+
+insert into sponsored_by values (501,'M1');
+insert into sponsored_by values (502,'M1');
+insert into sponsored_by values (501,'M2');
+insert into sponsored_by values (501,'M3');
+insert into sponsored_by values (503,'M3');
+insert into sponsored_by values (504,'M3');
+select * from sponsored_by;
+
+insert into equipment values (901,'Badminton Racket',2100,40);
+insert into equipment values (902,'Badminton Shuttle',100,20);
+insert into equipment values (903,'Drones',3000,10);
+select * from equipment;
+
+insert into require values (901,'M1');
+insert into require values (902,'M1');
+insert into require values (903,'M1');
+insert into require values (903,'M2');
+insert into require values (903,'M3');
+select * from require;
+
+
+insert into travels_to values ('08:30 AM','01-05-2016','Engenehao Stadium',2503,'A5','B01');
+insert into travels_to values ('08:30 AM','01-05-2016','Engenehao Stadium',2503,'A6','B01');
+insert into travels_to values ('08:30 AM','01-05-2016','Engenehao Stadium',2503,'A7','B01');
+insert into travels_to values ('08:00 AM','01-05-2016','Engenehao Stadium',2503,'O3','B02');
+insert into travels_to values ('04:30 PM','03-05-2016','Sambrodomo', 2504,'A2','B01');
+insert into travels_to values ('04:30 PM','03-05-2016','Sambrodomo', 2504,'A3','B03');
+insert into travels_to values ('04:30 PM','03-05-2016','Sambrodomo', 2504,'A4','B03');
+insert into travels_to values ('04:00 PM','03-05-2016','Sambrodomo', 2504,'O1','B04');
+insert into travels_to values ('04:00 PM','03-05-2016','Sambrodomo', 2504,'O2','B05');
+insert into travels_to values ('10:30 AM','10-05-2016','Riocentro', 2505,'A1','B05');
+insert into travels_to values ('10:30 AM','10-05-2016','Riocentro', 2505,'A2','B05');
+insert into travels_to values ('10:00 AM','10-05-2016','Riocentro', 2505,'A3','B03');
+insert into travels_to values ('10:00 AM','10-05-2016','Riocentro', 2505,'O1','B01');
+insert into travels_to values ('10:00 AM','10-05-2016','Riocentro', 2505,'O3','B05');
+select * from travels_to;
+
+
+insert into travels_from values ('03:30 PM','01-05-2016','Engenehao Stadium',2503,'A5','B01');
+insert into travels_from values ('03:30 PM','01-05-2016','Engenehao Stadium',2503,'A6','B01');
+insert into travels_from values ('03:30 PM','01-05-2016','Engenehao Stadium',2503,'A7','B01');
+insert into travels_from values ('05:00 PM','01-05-2016','Engenehao Stadium',2503,'O3','B02');
+insert into travels_from values ('10:30 PM','03-05-2016','Sambrodomo', 2504,'A2','B01');
+insert into travels_from values ('11:30 PM','03-05-2016','Sambrodomo', 2504,'A3','B03');
+insert into travels_from values ('11:30 PM','03-05-2016','Sambrodomo', 2504,'A4','B03');
+insert into travels_from values ('10:30 PM','03-05-2016','Sambrodomo', 2504,'O1','B04');
+insert into travels_from values ('10:30 PM','03-05-2016','Sambrodomo', 2504,'O2','B05');
+insert into travels_from values ('05:30 PM','10-05-2016','Riocentro', 2505,'A1','B05');
+insert into travels_from values ('05:30 PM','10-05-2016','Riocentro', 2505,'A2','B05');
+insert into travels_from values ('06:00 PM','10-05-2016','Riocentro', 2505,'A3','B03');
+insert into travels_from values ('07:00 PM','10-05-2016','Riocentro', 2505,'O1','B01');
+insert into travels_from values ('05:30 PM','10-05-2016','Riocentro', 2505,'O3','B05');
+select * from travels_from;
